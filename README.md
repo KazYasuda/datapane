@@ -23,17 +23,19 @@ Reports can be exported as standalone HTML documents, with rich components which
 For example, if you wanted to create a report with a table viewer and an interactive plot:
 
 ```python
-import altair as alt
 import pandas as pd
-from datapane import LocalReport, Table, Plot
-​
-df = pd.read_csv('https://query1.finance.yahoo.com/v7/finance/download/GOOG?period1=1553600505&period2=1585222905&interval=1d&events=history')
-chart = alt.Chart(df).encode(x='Date', y='High', y2='Low').mark_area(opacity=0.5).interactive()
-​
-LocalReport.create([
-    Table.create(df), 
-    Plot.create(chart)
-])
+import altair as alt
+import datapane as dp
+
+df = pd.read_csv('https://query1.finance.yahoo.com/v7/finance/download/GOOG?period2=1585222905&interval=1mo&events=history')
+
+chart = alt.Chart(df).encode(
+    x='Date:T',
+    y='Open'
+).mark_line().interactive()
+
+r = dp.Report(dp.Table(df), dp.Plot(chart))
+r.save(path='report.html', open=True)
 ```
 
 This would package a standalone HTML report such as the following, with an searchable Table and Plot component.
@@ -52,8 +54,8 @@ Datapane currently contains the following components. Need something different? 
 
 | Component | Description                                                                    | Supported Formats                                   | Example                                                                         |
 |-----------|--------------------------------------------------------------------------------|-----------------------------------------------------|---------------------------------------------------------------------------------|
-| Table     | A searchable, sortable table component for datasets. Supports up to 10m cells. | Pandas DataFrames, JSON documents, Local CSV files  | `Table.create(df)`                                                              |
-| Plot      | A wrapper for plots from Python visualisation libraries.                       | Altair, Bokeh, Matplotlib, SVG |  `Plot.create(altair_chart)`
+| Table     | A searchable, sortable table component for datasets. Supports up to 10m cells. | Pandas DataFrames, JSON documents, Local CSV files  | `Table(df)`                                                              |
+| Plot      | A wrapper for plots from Python visualisation libraries.                       | Altair, Bokeh, Matplotlib, SVG |  `Plot(altair_chart)`
 | Markdown  | A simple Markdown component to document your report.                           | Markdown, Text                                      | `Markdown("# My fun title")`                                              |
 
 # Datapane.com
@@ -61,8 +63,4 @@ Datapane currently contains the following components. Need something different? 
 In addition to the this local library, Datapane.com provides an API and hosted platform which allows you to:
 
 1. Upload Jupyter Notebooks and Python scripts, so that other people can run them in their browser with parameters to generate reports dynamically
-2. Share and embed your script or reports online -- either publicly, or privately within your team
-
-# Mission
-
-Although there are many enterprise BI and reporting tools with drag and drop interfaces, using SQL with Python is often the best combination for querying, analysing, and visualising data. Unfortunately, it can be hard to package and share results in a way that is accessible and friendly to everyone. Datapane's goal is to provide the bridge between where you want to analyse data, and how other people want to interact with it.
+2. Share and embed reports online -- either publicly, or privately within your team
