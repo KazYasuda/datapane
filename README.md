@@ -16,7 +16,7 @@
     </a>
 </p>
 
-<i> We are currently migrating the local report generation library to this open source repository. Please bear with us during the move!</i> 
+<i>(Update - July 2020) We are currently migrating the local report generation library to this open source repository - source code can be found on PyPi in the meantime. Please bear with us during the move! </i>
 
 Datapane is a Python library which makes it simple to build reports from the common objects in your data analysis, such as pandas DataFrames, plots from Python visualisation libraries, and Markdown. 
 
